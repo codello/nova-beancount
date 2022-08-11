@@ -1,0 +1,8 @@
+{
+    "identifier": "dev.codello.beancount",
+    "name": "Beancount",
+    "organization": "Codello",
+    "description": "Beancount Language Definition and Tools.",
+    "version": "0.1.0",
+    "categories": ["languages"]
+}

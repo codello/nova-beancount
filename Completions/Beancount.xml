@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<completions>
+    <provider>
+        <syntax>beancount</syntax>
+        <selector>
+            beancount.transaction.body
+        </selector>
+        <expression>\p{Lu}[\p{L}\p{N}:-]*</expression>
+        <symbols type="type" />
+    </provider>
+
+    <provider>
+        <syntax>beancount</syntax>
+        <selector>
+            beancount.tag-or-link,
+            beancount.metadata,
+            beancount.directive,
+            beancount.pushtag,
+            beancount.poptag,
+        </selector>
+        <expression>\#[\p{L}\p{N}_.-]*</expression>
+        <symbols type="enum-member" />
+    </provider>
+
+    <provider>
+        <syntax>beancount</syntax>
+        <selector>beancount.tag-or-link, beancount.metadata, beancount.directive</selector>
+        <expression>\^[\p{L}\p{N}_.-]*</expression>
+        <symbols type="property" />
+    </provider>
+
+    <provider>
+        <syntax>beancount</syntax>
+        <selector>beancount.directive, beancount.metadata</selector>
+        <expression>(T|F)[A-Z]*</expression>
+        <set>beancount.boolean</set>
+    </provider>
+
+    <set name="beancount.boolean">
+        <completion string="TRUE" />
+        <completion string="FALSE" />
+    </set>
+</completions>
