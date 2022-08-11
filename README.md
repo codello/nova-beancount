@@ -2,7 +2,7 @@
 
 **Beancount** provides syntax highlighting and autocompletion for **Beancount** plain text accounting files for [Nova](http://nova.app).
 
-![Beancount Screenshot](Images/screenshot.png)
+![Beancount Screenshot](https://github.com/codello/Beancount.novaextension/blob/main/Images/screenshot.png?raw=true)
 
 ## Language Support
 
