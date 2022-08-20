@@ -8,6 +8,7 @@
 
     <detectors>
         <extension priority="1.0">beancount</extension>
+        <extension priority="1.0">bean</extension>
         <extension priority="1.0">journal</extension>
         <match-content lines="1" priority="0.3">mode:\s*beancount</match-content>
     </detectors>
@@ -23,7 +24,7 @@
 
     <indentation>
         <increase>
-            <expression>\d{4,}[-/]\d+[-/]\d+\s*(!|\*|txn).*</expression>
+            <expression>\d{4,}[-/]\d+[-/]\d+\s*([\#*!PSTCURM]|txn).*</expression>
         </increase>
         <decrease>
             <expression>^\s*\d$</expression>
@@ -213,7 +214,7 @@
         <collection name="directive">
             <scope name="beancount.directive.txn">
                 <starts-with>
-                    <expression>\*|!|\b(txn)\b</expression>
+                    <expression>[\#*!PSTCURM]|\b(txn)\b</expression>
                     <capture number="0" name="beancount.keyword" />
                 </starts-with>
                 <ends-with />
@@ -318,7 +319,7 @@
         <collection name="posting">
             <scope name="beancount.posting">
                 <starts-with>
-                    <expression>(!|\*)?\s*(?=\p{Lu})</expression>
+                    <expression>([\#*!PSTCURM])?\s*(?=\p{Lu})</expression>
                     <capture number="1" name="beancount.keyword.txn" />
                 </starts-with>
                 <ends-with>
@@ -329,18 +330,18 @@
                     <include syntax="self" collection="amount" optional="true" />
                     <scope name="beancount.hold-cost" optional="true">
                         <starts-with>
-                            <expression>\{</expression>
+                            <expression>\{\{?</expression>
                             <capture number="0" name="beancount.bracket" />
                         </starts-with>
                         <ends-with>
-                            <expression>\}</expression>
+                            <expression>\}\}?</expression>
                             <capture number="0" name="beancount.bracket" />
                         </ends-with>
                         <subscopes>
+                            <include syntax="self" collection="date" />
                             <include syntax="self" collection="numer" />
                             <include syntax="self" collection="amount" />
                             <include syntax="self" collection="string" />
-                            <include syntax="self" collection="date" />
                         </subscopes>
                     </scope>
                     <scope name="beancount.at-cost" optional="true">
@@ -449,7 +450,7 @@
                     <expression>(?=[\d(+-])(?!\d{4,}[-/]\d+[-/]\d+)</expression>
                 </starts-with>
                 <ends-with>
-                    <expression>(?=[^\s\d.()*\/+-]|$)</expression>
+                    <expression>(?=[^\s\d.,()*\/+-]|$)</expression>
                 </ends-with>
                 <subscopes>
                     <scope name="beancount.operator">
