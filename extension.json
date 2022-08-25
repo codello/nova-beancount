@@ -3,11 +3,119 @@
     "name": "Beancount",
     "organization": "Codello",
     "description": "Beancount Language Definition and Tools.",
-    "version": "0.2.0",
-    "categories": ["languages"],
+    "version": "0.3.0",
+    "categories": ["languages", "tasks"],
     "license": "MIT",
     "repository": "https://github.com/codello/Beancount.novaextension",
     "bugs": {
         "url": "https://github.com/codello/Beancount.novaextension/issues"
+    },
+
+    "main": "main.js",
+
+    "entitlements": {
+        "filesystem": "readonly",
+        "process": true
+    },
+
+    "issueMatchers": {
+        "bean-check": {
+            "pattern": {
+                "regexp": "^([^:]+):(\\d+):\\s*(.*)$",
+                "file": 1,
+                "line": 2,
+                "message": 3,
+                "severity": "error"
+            }
+        }
+    },
+
+    "configWorkspace": [
+        {
+            "key": "beancount.journal",
+            "title": "Main Journal",
+            "description": "Your main Beancount journal.",
+            "type": "path",
+            "relative": true,
+            "filetype": ["journal", "bean", "beancount"]
+        },
+        {
+            "key": "beancount.config",
+            "title": "Configuration File",
+            "description": "The configuration file used for Beancount tasks.",
+            "required": true,
+            "type": "path",
+            "relative": true,
+            "filetype": ["public.python-script"]
+        },
+        {
+            "key": "beancount.interpreter",
+            "title": "Python Interpreter",
+            "description": "The Python interpreter used to run Beancount tasks. By default the configuration from the Python settings is used.",
+            "placeholder": "Automatic",
+            "type": "path",
+            "relative": true,
+            "filetype": ["public.executable"]
+        }
+    ],
+
+    "taskTemplates": {
+        "fava": {
+            "name": "Fava Web Server",
+            "description": "Starts a Fava web server for beancount",
+            "image": "fava",
+            "tasks": {
+                "run": {
+                    "resolve": "fava",
+                    "persistent": true
+                }
+            },
+            "config": [
+                {
+                    "key": "fava.files",
+                    "title": "Journal Files",
+                    "description": "If empty use the main journal from project settings.",
+                    "type": "pathArray",
+                    "relative": true
+                }, {
+                    "key": "fava.port",
+                    "title": "Port",
+                    "description": "The port on which to run Fava.",
+                    "type": "number",
+                    "default": 5000,
+                    "min": 1024,
+                    "max": 65535
+                }, {
+                    "key": "fava.custom-args",
+                    "title": "Additional Arguments",
+                    "description": "Custom arguments passed to the fava command.",
+                    "type": "stringArray"
+                }
+            ]
+        },
+        "import": {
+            "name": "Beancount Import",
+            "description": "Imports new transactions from compatible sources.",
+            "tasks": {
+                "build": {"resolve": "beancount"},
+                "run": {"resolve": "beancount"}
+            },
+            "config": [
+                {
+                    "key": "beancount.sources",
+                    "title": "Import Sources",
+                    "description": "A list of files and folders from which transactions will be imported.",
+                    "required": true,
+                    "type": "pathArray",
+                    "allowFiles": true,
+                    "allowFolders": true
+                }, {
+                    "key": "beancount.extract-reverse",
+                    "title": "Reverse Entries",
+                    "description": "Extract transactions in reverse order.",
+                    "type": "boolean"
+                }
+            ]
+        }
     }
 }

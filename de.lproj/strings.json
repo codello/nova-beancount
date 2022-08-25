@@ -1,0 +1,36 @@
+{
+  "Beancount Language Definition and Tools.": "Beancount Syntax-Definition und Tools.",
+
+  "Configuration File": "Konfigurationsdatei",
+  "The configuration file used for Beancount tasks.": "Die Konfigurationsdatei für Beancount-Aufgaben.",
+
+  "Main Journal": "Primäres Journal",
+  "Your main Beancount journal.": "Die primäre Beancount Journal-Datei.",
+
+  "Python Interpreter": "Python-Interpreter",
+  "The Python interpreter used to run Beancount tasks. By default the configuration from the Python settings is used.": "Der Python-Interpreter, der für Beancount-Aufgaben verwendet wird. Standardmäßig wird der Interpreter aus den Python-Einstellungen verwendet.",
+  "Automatic": "Automatisch",
+
+
+  "Fava Web Server": "Fava Web Server",
+  "Starts a Fava web server for beancount": "Startet einen Fava Webserver für Beancount",
+
+  "Journal Files": "Journal-Dateien",
+  "If empty use the main journal from project settings.": "Standardmäßig wird das Journal aus den Erweiterungs-Einstellungen verwendet.",
+
+  "Port": "Port",
+  "The port on which to run Fava.": "Der Port auf dem Fava ausgeführt wird.",
+
+  "Additional Arguments": "Zusätzliche Argumente",
+  "Custom arguments passed to the fava command.": "Zusätzliche Argumente, die an das Fava-Programm übergeben werden.",
+
+
+  "Beancount Import": "Beancount Import",
+  "Imports new transactions from compatible sources.": "Importiert neue Transaktionen aus unterstützten Quellen.",
+
+  "Import Sources": "Import-Quellen",
+  "A list of files and folders from which transactions will be imported.": "Eine Liste von Ordnern und Dateien, aus denen Transaktionen importiert werden.",
+
+  "Reverse Entries": "Einträge umdrehen",
+  "Extract transactions in reverse order.": "Fügt Transaktionen in umgekehrt chronologischer Reihenfolge hinzu"
+}
