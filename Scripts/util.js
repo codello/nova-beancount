@@ -29,5 +29,40 @@ exports.resolveExecutable = function(name) {
  * Escapes the given string for inclusion as a shell argument.
  */
 exports.escapeShell = function(cmd) {
-  return '"' + cmd.replace(/(["'$`\\])/g, '\\$1') + '"';
+    return '"' + cmd.replace(/(["'$`\\])/g, '\\$1') + '"';
 };
+
+/**
+ * Runs a process with the given cmd and options. This function returns a
+ * promise that resolves to the stdout, stderr and exitCode of the process.
+ *
+ * Optionally it is possible to pass a string value as stdin to the process.
+ */
+exports.runProcess = function(cmd, opts, stdin = null) {
+    return new Promise((resolve, reject) => {
+        try {
+            const p = new Process(cmd, opts);
+            let stdout = "";
+            let stderr = "";
+            p.onStdout(line => stdout += line)
+            p.onStderr(line => stderr += line);
+            p.onDidExit(code => {
+                resolve({
+                    stdout,
+                    stderr,
+                    exitCode: code
+                });
+            });
+            p.start();
+            if (stdin) {
+                const writer = p.stdin.getWriter();
+                writer.ready.then(() => {
+                    writer.write(stdin);
+                    writer.close();
+                });
+            }
+        } catch (err) {
+            reject(err);
+        }
+    });
+}

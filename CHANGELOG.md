@@ -1,6 +1,11 @@
+## Version 0.4.0
+- Add `bean-black` formatting command
+
+
 ## Version 0.3.0
 - Add Syntax checking with issue matcher
 - Add task templates for fava and transaction importing
+
 
 ## Version 0.2.0
 
@@ -12,6 +17,7 @@
 
 ## Fixed
 - Date recognition in cost specification
+
 
 ## Version 0.1.1
 

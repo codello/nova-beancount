@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Make this conformant to the Beancount lexer: https://github.com/beancount/beancount/blob/v2/beancount/parser/lexer.l -->
 <syntax name="beancount">
     <meta>
         <name>Beancount</name>
@@ -279,7 +280,7 @@
                     <include syntax="self" collection="account" />
                     <scope name="beancount.directive.open.currency-constraint" optional="true" repeat="true">
                         <starts-with>
-                            <expression>,|(?=\p{Lu})</expression>
+                            <expression>,|(?=[A-Z])</expression>
                             <capture number="0" name="beancount.operator" />
                         </starts-with>
                         <ends-with />
@@ -494,11 +495,12 @@
         </collection>
 
         <!-- !Booleans -->
-        <collection name="boolean">
+        <collection name="boolean-or-null">
             <scope name="beancount.value.boolean">
                 <strings>
                     <string>TRUE</string>
                     <string>FALSE</string>
+                    <string>NULL</string>
                 </strings>
             </scope>
         </collection>

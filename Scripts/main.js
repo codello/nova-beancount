@@ -1,3 +1,7 @@
+// Commands
+const Commands = require("Commands.js");
+nova.commands.register("formatBeanBlack", Commands.formatBeanBlack);
+
 // Tasks
 const Tasks = require("Tasks.js");
 nova.assistants.registerTaskAssistant(Tasks.fava, {

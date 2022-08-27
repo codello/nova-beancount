@@ -27,7 +27,6 @@ exports.fava = {
         ];
 
         // Journal files
-        files = files.map(path => nova.path.isAbsolute(path) ? path : nova.path.join(nova.workspace.path, path));
         args.push(...files);
         return new TaskProcessAction(bin, {
             args,

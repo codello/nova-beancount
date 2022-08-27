@@ -12,6 +12,11 @@
   "Automatic": "Automatisch",
 
 
+  "Format with bean-black": "Mit bean-black formatieren",
+  "File could not be formatted": "Die Datei konnte nicht formatiert werden",
+  "The file contains a syntax error and was not formatted.": "Die Datei wurde nicht formatiert, da sie einen Syntaxfehler enthält.",
+
+
   "Fava Web Server": "Fava Web Server",
   "Starts a Fava web server for beancount": "Startet einen Fava Webserver für Beancount",
 
