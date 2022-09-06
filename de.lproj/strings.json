@@ -1,18 +1,26 @@
 {
   "Beancount Language Definition and Tools.": "Beancount Syntax-Definition und Tools.",
 
+  "Preferred Formatter": "Standard-Formatter",
+  "Select the default journal formatter for projects.": "Wählt den bevorzugten Formatter für Journals.",
+
+
   "Configuration File": "Konfigurationsdatei",
   "The configuration file used for Beancount tasks.": "Die Konfigurationsdatei für Beancount-Aufgaben.",
 
   "Main Journal": "Primäres Journal",
   "Your main Beancount journal.": "Die primäre Beancount Journal-Datei.",
 
+  "Formatter": "Formatter",
+  "Select the journal formatter for this project.": "Wählt den Formatter für dieses Projekt",
+  "Extension Default": "Aus Erweiterungs-Einstellungen übernehmen",
+
   "Python Interpreter": "Python-Interpreter",
   "The Python interpreter used to run Beancount tasks. By default the configuration from the Python settings is used.": "Der Python-Interpreter, der für Beancount-Aufgaben verwendet wird. Standardmäßig wird der Interpreter aus den Python-Einstellungen verwendet.",
   "Automatic": "Automatisch",
 
 
-  "Format with bean-black": "Mit bean-black formatieren",
+  "Format Journal": "Journal Formatieren",
   "File could not be formatted": "Die Datei konnte nicht formatiert werden",
   "The file contains a syntax error and was not formatted.": "Die Datei wurde nicht formatiert, da sie einen Syntaxfehler enthält.",
 

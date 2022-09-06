@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- TODO: Make this conformant to the Beancount lexer: https://github.com/beancount/beancount/blob/v2/beancount/parser/lexer.l -->
 <syntax name="beancount">
     <meta>
         <name>Beancount</name>
@@ -25,7 +24,7 @@
 
     <indentation>
         <increase>
-            <expression>\d{4,}[-/]\d+[-/]\d+\s*([\#*!PSTCURM]|txn).*</expression>
+            <expression>\d{4,}[-\/]\d+[-\/]\d+\s*([!&amp;\#?%PSTCURM*]|txn).*</expression>
         </increase>
         <decrease>
             <expression>^\s*\d$</expression>
@@ -54,6 +53,7 @@
     <scopes>
         <include syntax="self" collection="dated-directive" />
         <include syntax="self" collection="tag-stack" />
+        <include syntax="self" collection="meta-stack" />
         <include syntax="self" collection="comment" />
         <include syntax="self" collection="heading" />
         <include syntax="self" collection="processing" />
@@ -186,6 +186,23 @@
             </scope>
         </collection>
 
+        <!-- !Meta Stack -->
+        <collection name="meta-stack">
+            <scope name="beancount.pushmeta">
+                <starts-with>
+                    <expression>^pushmeta|^popmeta</expression>
+                    <capture number="0" name="beancount.keyword" />
+                </starts-with>
+                <ends-with><expression>$</expression></ends-with>
+                <subscopes>
+                    <scope name="beancount.identifier.key">
+                        <expression>\b[a-z][a-zA-Z0-9_-]+:</expression>
+                    </scope>
+                    <include syntax="self" collection="string" />
+                </subscopes>
+            </scope>
+        </collection>
+
         <!-- !Directives -->
         <collection name="dated-directive">
             <scope name="beancount.directive">
@@ -215,7 +232,7 @@
         <collection name="directive">
             <scope name="beancount.directive.txn">
                 <starts-with>
-                    <expression>[\#*!PSTCURM]|\b(txn)\b</expression>
+                    <expression>[!&amp;\#?%PSTCURM*]|\b(txn)\b</expression>
                     <capture number="0" name="beancount.keyword" />
                 </starts-with>
                 <ends-with />
@@ -320,7 +337,7 @@
         <collection name="posting">
             <scope name="beancount.posting">
                 <starts-with>
-                    <expression>([\#*!PSTCURM])?\s*(?=\p{Lu})</expression>
+                    <expression>([!&amp;\#?%PSTCURM*])?\s*(?=\p{Lu})</expression>
                     <capture number="1" name="beancount.keyword.txn" />
                 </starts-with>
                 <ends-with>
@@ -363,7 +380,7 @@
         <collection name="metadata">
             <scope name="beancount.metadata">
                 <starts-with>
-                    <expression>\b(\p{Ll}[\p{L}\p{N}_-]+)(:)[^\S\n\r]*</expression>
+                    <expression>\b([a-z][a-zA-Z0-9_-]+)(:)[^\S\n\r]*</expression>
                     <capture number="1" name="beancount.identifier.key" />
                     <capture number="2" name="beancount.operator" />
                 </starts-with>
@@ -462,7 +479,7 @@
         </collection>
         <collection name="currency">
             <scope name="beancount.identifier.type.enum">
-                <expression>\p{Lu}([\p{Lu}\p{N}&apos;\._-]{0,22}[\p{Lu}\p{N}])?\b</expression>
+                <expression>[A-Z][A-Z0-9&apos;\._-]{0,22}[A-Z0-9]\b</expression>
             </scope>
         </collection>
         <collection name="amount">
@@ -484,13 +501,13 @@
         <collection name="tag">
             <scope name="beancount.identifier.property">
                 <symbol type="enum-member" scope="global" />
-                <expression>\#[\p{L}\p{N}_.-]+</expression>
+                <expression>\#[A-Za-z0-9_/.-]+</expression>
             </scope>
         </collection>
         <collection name="link">
             <scope name="beancount.identifier.decorator">
                 <symbol type="property" scope="global" />
-                <expression>\^[\p{L}\p{N}_.-]+</expression>
+                <expression>\^[A-Za-z0-9_/.-]+</expression>
             </scope>
         </collection>
 

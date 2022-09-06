@@ -1,6 +1,6 @@
 // Commands
 const Commands = require("Commands.js");
-nova.commands.register("formatBeanBlack", Commands.formatBeanBlack);
+nova.commands.register("format", Commands.format);
 
 // Tasks
 const Tasks = require("Tasks.js");

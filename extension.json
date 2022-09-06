@@ -3,7 +3,7 @@
     "name": "Beancount",
     "organization": "Codello",
     "description": "Beancount Language Definition and Tools.",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "categories": ["languages", "tasks"],
     "license": "MIT",
     "repository": "https://github.com/codello/Beancount.novaextension",
@@ -21,7 +21,7 @@
     "issueMatchers": {
         "bean-check": {
             "pattern": {
-                "regexp": "^([^:]+):(\\d+):\\s*(.*)$",
+                "regexp": "^(\\S[^:]+):(\\d+):\\s*(.*)$",
                 "file": 1,
                 "line": 2,
                 "message": 3,
@@ -29,6 +29,17 @@
             }
         }
     },
+
+    "config": [
+        {
+            "key": "beancount.formatter",
+            "title": "Preferred Formatter",
+            "description": "Select the default journal formatter for projects.",
+            "type": "enum",
+            "values": ["bean-format", "bean-black"],
+            "default": "bean-format"
+        }
+    ],
 
     "configWorkspace": [
         {
@@ -49,6 +60,14 @@
             "filetype": ["public.python-script"]
         },
         {
+            "key": "beancount.formatter",
+            "title": "Formatter",
+            "description": "Select the journal formatter for this project.",
+            "type": "enum",
+            "values": [["", "Extension Default"], "bean-format", "bean-black"],
+            "default": ""
+        },
+        {
             "key": "beancount.interpreter",
             "title": "Python Interpreter",
             "description": "The Python interpreter used to run Beancount tasks. By default the configuration from the Python settings is used.",
@@ -62,8 +81,8 @@
     "commands": {
         "editor": [
             {
-                "title": "Format with bean-black",
-                "command": "formatBeanBlack",
+                "title": "Format Journal",
+                "command": "format",
                 "when": "documentHasPath && editorHasFocus",
                 "filters": {
                     "syntaxes": ["beancount"]
@@ -127,6 +146,14 @@
                     "title": "Reverse Entries",
                     "description": "Extract transactions in reverse order.",
                     "type": "boolean"
+                }, {
+                    "key": "beancount.destination",
+                    "title": "Output File",
+                    "description": "Imported transactions will be added to this file.",
+                    "placeholder": "Main Journal File",
+                    "type": "path",
+                    "relative": true,
+                    "filetype": ["journal", "bean", "beancount"]
                 }
             ]
         }
