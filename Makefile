@@ -6,7 +6,8 @@ endif
 EXTENSION = Beancount.novaextension
 BUILD_DIR ?= build
 
-VERSION ?= $$(git describe --tags --abbrev=0)
+GIT_TAG := $(shell git describe --tags)
+VERSION ?= $(patsubst v%,%,$(GIT_TAG))
 VERSION ?= "dev"
 
 # Tools
@@ -43,7 +44,7 @@ clean:
 
 # Extension Meta
 $(BUILD_DIR)/$(EXTENSION)/extension.json: extension.json
-	jq '.version = "abc"' $< > $@
+	jq --arg version "$(VERSION)" '.version = $$version' $< > $@
 
 # Static Files
 $(BUILD_DIR)/$(EXTENSION)/%: $*
@@ -94,6 +95,9 @@ $(BUILD_DIR)/src/scanner.c: tree-sitter-beancount/src/scanner.c $(BUILD_DIR)/src
 
 $(BUILD_DIR)/src/parser.c: $(BUILD_DIR)/src/tree_sitter/parser.h
 
-$(BUILD_DIR)/src/tree_sitter/parser.h: tree-sitter-beancount/grammar.js
+$(BUILD_DIR)/src/tree_sitter/parser.h: $(BUILD_DIR)/grammar.js
+	cd $(BUILD_DIR) && $(TS) generate --no-bindings
+
+$(BUILD_DIR)/grammar.js: tree-sitter-beancount/grammar.js grammar.js.patch
 	mkdir -p $(BUILD_DIR)
-	cd $(BUILD_DIR) && $(TS) generate --no-bindings $(realpath $<)
+	patch $< grammar.js.patch -o $@

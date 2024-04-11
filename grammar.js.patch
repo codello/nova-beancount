@@ -1,0 +1,11 @@
+--- a/grammar.js
++++ b/grammar.js
+@@ -84,7 +84,7 @@ module.exports = grammar({
+         account: $ =>
+             token(
+                 seq(
+-                    /Assets|Liabilities|Equity|Income|Expenses/,
++                    /\p{Lu}[\p{L}\p{N}-]*/,
+                     repeat1(
+                         seq(
+                             ":",
