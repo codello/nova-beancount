@@ -6,9 +6,8 @@ endif
 EXTENSION = Beancount.novaextension
 BUILD_DIR ?= build
 
-GIT_TAG := $(shell git describe --tags)
+GIT_TAG := $(shell git describe --tags --always)
 VERSION ?= $(patsubst v%,%,$(GIT_TAG))
-VERSION ?= "dev"
 
 # Tools
 TS ?= tree-sitter

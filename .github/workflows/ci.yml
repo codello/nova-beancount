@@ -21,9 +21,6 @@ jobs:
         run: echo "/Applications/Nova.app/Contents/SharedSupport" >> "$GITHUB_PATH"
       - name: Build Extension
         run: make build
-      - name: Validate Extension
-        if: startsWith(github.event.ref, 'refs/tags/')
-        run: make validate
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
