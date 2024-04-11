@@ -44,6 +44,7 @@ clean:
 
 # Extension Meta
 $(BUILD_DIR)/$(EXTENSION)/extension.json: extension.json
+	mkdir -p $(dir $@)
 	jq --arg version "$(VERSION)" '.version = $$version' $< > $@
 
 # Static Files
