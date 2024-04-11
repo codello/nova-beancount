@@ -63,10 +63,8 @@ jobs:
         run: brew install --cask nova
       - name: Add Nova to PATH
         run: echo "/Applications/Nova.app/Contents/SharedSupport" >> "$GITHUB_PATH"
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Sign in to Nova
-        run: echo "$NOVA_USERNAME\n$NOVA_PASSWORD" | nova extension login
+        run: echo -e "$NOVA_USERNAME\n$NOVA_PASSWORD" | nova extension login
         env:
           NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
           NOVA_PASSWORD: ${{ secrets.NOVA_PASSWORD }}
