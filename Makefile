@@ -35,8 +35,8 @@ validate: build
 	nova extension validate $(BUILD_DIR)/$(EXTENSION)
 
 .PHONY: publish
-publish:
-# TODO: Publish in Nova
+publish: build validate
+	nova extension publish --no-confirm $(BUILD_DIR)/$(EXTENSION)
 
 .PHONY: clean
 clean:

@@ -1,3 +1,6 @@
+## Version 0.6.0
+- The extension is now using a tree-sitter based parser for a faster and more reliable experience.
+
 ## Version 0.5.0
 - Add destination file to import task template (beacuse journals might be split across multiple files)
 - Implement pushmeta, popmeta

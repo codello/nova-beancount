@@ -28,7 +28,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Beancount.novaextension
-          path: build/Beancount.novaextension
+          path: |
+            build
+            !build/*
+            build/Beancount.novaextension
+          if-no-files-found: error
 
   publish:
     name: Publish Extension
@@ -45,7 +49,7 @@ jobs:
       - name: Validate Extension
         run: nova extension validate Beancount.novaextension
       - name: Publish Extension
-        run: nova extension publish --no-confirm
+        run: nova extension publish --no-confirm Beancount.novaextension
       - name: Package Extension
         run: zip -r Beancount.novaextension.zip Beancount.novaextension/
       - name: Upload Release Assets
