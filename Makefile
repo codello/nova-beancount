@@ -53,7 +53,7 @@ $(BUILD_DIR)/$(EXTENSION)/extension.json: extension.json
 # Static Files
 $(BUILD_DIR)/$(EXTENSION)/%: $*
 	mkdir -p $(dir $@)
-	cp -r $< $@
+	cp -r $* $@
 
 # Tree Sitter Library
 $(BUILD_DIR)/$(EXTENSION)/Syntaxes/libtree-sitter-beancount.dylib: $(BUILD_DIR)/libtree-sitter-beancount.dylib
