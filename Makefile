@@ -33,6 +33,10 @@ install: build
 validate: build
 	nova extension validate $(BUILD_DIR)/$(EXTENSION)
 
+.PHONY: login
+login:
+	(echo "$$NOVA_USERNAME" && echo "$$NOVA_PASSWORD") | nova extension login
+
 .PHONY: publish
 publish: build validate
 	nova extension publish --no-confirm $(BUILD_DIR)/$(EXTENSION)

@@ -64,7 +64,7 @@ jobs:
       - name: Add Nova to PATH
         run: echo "/Applications/Nova.app/Contents/SharedSupport" >> "$GITHUB_PATH"
       - name: Sign in to Nova
-        run: echo -e "$NOVA_USERNAME\n$NOVA_PASSWORD" | nova extension login
+        run: (echo "$NOVA_USERNAME" && echo "$NOVA_PASSWORD") | nova extension login
         env:
           NOVA_USERNAME: ${{ secrets.NOVA_USERNAME }}
           NOVA_PASSWORD: ${{ secrets.NOVA_PASSWORD }}
@@ -75,6 +75,6 @@ jobs:
       - name: Package Extension
         run: zip -r Beancount.novaextension.zip Beancount.novaextension/
       - name: Upload Release Assets
-        run: gh release upload "$GITHUB_REF_NAME" Beancount.novaextension.zip
+        run: gh release upload --repo "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME" Beancount.novaextension.zip
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
