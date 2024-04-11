@@ -15,6 +15,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
+      - name: Configure Homebrew Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew/tree-sitter--*
+            ~/Library/Caches/Homebrew/tree-sitter_bottle*
+            ~/Library/Caches/Homebrew/downloads/*--Nova*
+          key: brew-${{ hashFiles('Brewfile') }}
+          restore-keys: brew-
       - name: Install Dependencies
         run: brew bundle install
       - name: Add Nova to PATH
@@ -41,10 +50,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Beancount.novaextension
+      - name: Configure Homebrew Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Caches/Homebrew/tree-sitter--*
+            ~/Library/Caches/Homebrew/tree-sitter_bottle*
+            ~/Library/Caches/Homebrew/downloads/*--Nova*
+          key: brew-${{ hashFiles('Brewfile') }}
+          restore-keys: brew-
       - name: Install Nova
         run: brew install --cask nova
       - name: Add Nova to PATH
         run: echo "/Applications/Nova.app/Contents/SharedSupport" >> "$GITHUB_PATH"
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Sign in to Nova
         run: echo "$NOVA_USERNAME\n$NOVA_PASSWORD" | nova extension login
         env:
