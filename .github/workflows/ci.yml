@@ -1,0 +1,41 @@
+name: CI
+on:
+  push:
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    steps:
+      - name: Check out Code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+      - name: Install Nova
+        run: brew install --cask nova
+      - name: Build Extension
+        run: make build
+      - name: Validate Extension
+        run: make validate
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Beancount.novaextension
+          path: build/Beancount.novaextension
+
+  publish:
+    name: Publish Extension
+    if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+    runs-on: macos-latest
+    steps:
+      - name: Upload Release Assets
+        if: ${{ github.event_name == 'release' && github.event.action == 'published' }}
+        run: gh release upload "$GITHUB_REF_NAME" build/*
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
