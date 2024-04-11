@@ -53,7 +53,7 @@ $(BUILD_DIR)/$(EXTENSION)/extension.json: extension.json
 # Static Files
 $(BUILD_DIR)/$(EXTENSION)/%: $*
 	mkdir -p $(dir $@)
-	cp -r $* $@
+	cp -r $< $@
 
 # Tree Sitter Library
 $(BUILD_DIR)/$(EXTENSION)/Syntaxes/libtree-sitter-beancount.dylib: $(BUILD_DIR)/libtree-sitter-beancount.dylib
@@ -70,7 +70,7 @@ LIBDIR ?= $(PREFIX)/lib
 
 ## Source Files ##
 SRC_DIR := $(BUILD_DIR)/src
-SRC += $(BUILD_DIR)/src/scanner.c $(BUILD_DIR)/src/parser.c
+SRC += $(SRC_DIR)/scanner.c $(SRC_DIR)/parser.c
 OBJ := $(addsuffix .o,$(basename $(SRC)))
 
 ## Compilation Flags ##
@@ -94,12 +94,12 @@ LINKSHARED := $(LINKSHARED)-install_name,$(LIBDIR)/libtree-sitter-beancount.dyli
 $(BUILD_DIR)/libtree-sitter-beancount.dylib: $(OBJ)
 	$(CC) $(LDFLAGS) $(LINKSHARED) $^ $(LDLIBS) -o $@
 
-$(BUILD_DIR)/src/scanner.c: tree-sitter-beancount/src/scanner.c $(BUILD_DIR)/src/tree_sitter/parser.h
+$(SRC_DIR)/scanner.c: tree-sitter-beancount/src/scanner.c $(SRC_DIR)/tree_sitter/parser.h
 	cp $< $@
 
-$(BUILD_DIR)/src/parser.c: $(BUILD_DIR)/src/tree_sitter/parser.h
+$(SRC_DIR)/parser.c: $(SRC_DIR)/tree_sitter/parser.h
 
-$(BUILD_DIR)/src/tree_sitter/parser.h: $(BUILD_DIR)/grammar.js
+$(SRC_DIR)/tree_sitter/parser.h: $(BUILD_DIR)/grammar.js
 	cd $(BUILD_DIR) && $(TS) generate --no-bindings
 
 $(BUILD_DIR)/grammar.js: tree-sitter-beancount/grammar.js grammar.js.patch
