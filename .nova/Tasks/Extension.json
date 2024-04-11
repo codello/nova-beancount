@@ -1,0 +1,13 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : "make install"
+    },
+    "clean" : {
+      "enabled" : true,
+      "script" : "make clean"
+    }
+  },
+  "openLogOnRun" : "fail"
+}
