@@ -2,42 +2,37 @@
 <completions>
     <provider>
         <syntax>beancount</syntax>
-        <selector>
-            beancount.transaction.body
-        </selector>
+        <query>(account)</query>
         <expression>\p{Lu}[\p{L}\p{N}:-]*</expression>
         <symbols type="type" />
     </provider>
 
     <provider>
         <syntax>beancount</syntax>
-        <selector>
-            beancount.tag-or-link,
-            beancount.metadata,
-            beancount.directive,
-            beancount.pushtag,
-            beancount.poptag,
-        </selector>
+        <trigger>#</trigger>
+        <query>(tag)</query>
         <expression>\#[\p{L}\p{N}_.-]*</expression>
-        <symbols type="enum-member" />
+        <symbols type="tag" />
     </provider>
 
     <provider>
         <syntax>beancount</syntax>
-        <selector>beancount.tag-or-link, beancount.metadata, beancount.directive</selector>
+        <trigger>^</trigger>
+        <query>(link)</query>
         <expression>\^[\p{L}\p{N}_.-]*</expression>
         <symbols type="property" />
     </provider>
 
     <provider>
         <syntax>beancount</syntax>
-        <selector>beancount.directive, beancount.metadata</selector>
-        <expression>(T|F)[A-Z]*</expression>
+        <query>(value)</query>
+        <expression>(T|F|N)[A-Z]*</expression>
         <set>beancount.boolean</set>
     </provider>
 
-    <set name="beancount.boolean">
+    <set name="beancount.boolean" symbol="keyword">
         <completion string="TRUE" />
         <completion string="FALSE" />
+        <completion string="NULL" />
     </set>
 </completions>

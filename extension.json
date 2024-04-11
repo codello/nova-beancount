@@ -3,13 +3,11 @@
     "name": "Beancount",
     "organization": "Codello",
     "description": "Beancount Language Definition and Tools.",
-    "version": "0.5.0",
+    "version": "<set during builds>",
     "categories": ["languages", "tasks"],
     "license": "MIT",
-    "repository": "https://github.com/codello/Beancount.novaextension",
-    "bugs": {
-        "url": "https://github.com/codello/Beancount.novaextension/issues"
-    },
+    "repository": "https://github.com/codello/nova-beancount",
+    "bugs": "https://github.com/codello/nova-beancount/issues",
 
     "main": "main.js",
 

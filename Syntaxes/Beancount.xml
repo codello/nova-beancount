@@ -1,525 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <syntax name="beancount">
-    <meta>
-        <name>Beancount</name>
-        <type>structured</type>
-        <preferred-file-extension>beancount</preferred-file-extension>
-    </meta>
+	<meta>
+		<name>Beancount</name>
+		<type>structured</type>
+		<preferred-file-extension>beancount</preferred-file-extension>
+	</meta>
 
-    <detectors>
-        <extension priority="1.0">beancount</extension>
-        <extension priority="1.0">bean</extension>
-        <extension priority="1.0">journal</extension>
-        <match-content lines="1" priority="0.3">mode:\s*beancount</match-content>
-    </detectors>
+	<detectors>
+		<extension priority="1.0">beancount</extension>
+		<extension priority="1.0">bean</extension>
+		<extension priority="1.0">journal</extension>
+		<match-content lines="1" priority="0.3">mode:\s*beancount</match-content>
+	</detectors>
 
-    <identifiers>
-        <prefixes>
-            <string>#</string>
-            <string>^</string>
-        </prefixes>
-    </identifiers>
+	<identifiers>
+		<prefixes>
+			<string>#</string>
+			<string>^</string>
+		</prefixes>
+	</identifiers>
 
-    <symbols redefinition="non-distinct" />
+	<symbols redefinition="non-distinct" />
 
-    <indentation>
-        <increase>
-            <expression>\d{4,}[-\/]\d+[-\/]\d+\s*([!&amp;\#?%PSTCURM*]|txn).*</expression>
-        </increase>
-        <decrease>
-            <expression>^\s*\d$</expression>
-        </decrease>
-    </indentation>
+	<indentation>
+		<increase>
+			<expression>\d{4,}[-\/]\d+[-\/]\d+\s*([!&amp;\#?%PSTCURM*]|txn).*</expression>
+		</increase>
+		<decrease>
+			<expression>^\s*\d$</expression>
+		</decrease>
+	</indentation>
 
-    <comments>
-        <single>
-            <expression>;</expression>
-        </single>
-        <single>
-            <expression>*</expression>
-        </single>
-    </comments>
+	<comments>
+		<single>
+			<expression>;</expression>
+		</single>
+		<single>
+			<expression>*</expression>
+		</single>
+	</comments>
 
-    <brackets>
-        <pair open="(" close=")" />
-    </brackets>
+	<brackets>
+		<pair open="(" close=")" />
+		<pair open="{" close="}" />
+	</brackets>
 
-    <surrounding-pairs>
-        <pair open="(" close=")" />
-        <pair open="{" close="}" />
-        <pair open="&quot;" close="&quot;" />
-    </surrounding-pairs>
+	<surrounding-pairs>
+		<pair open="(" close=")" />
+		<pair open="{" close="}" />
+		<pair open="&quot;" close="&quot;" />
+	</surrounding-pairs>
 
-    <scopes>
-        <include syntax="self" collection="dated-directive" />
-        <include syntax="self" collection="tag-stack" />
-        <include syntax="self" collection="meta-stack" />
-        <include syntax="self" collection="comment" />
-        <include syntax="self" collection="heading" />
-        <include syntax="self" collection="processing" />
-    </scopes>
+	<injection>
+		<expression>(beancount|Beancount)$</expression>
+	</injection>
 
-    <collections>
-        <!-- Comments -->
-        <collection name="comment">
-            <scope name="beancount.comment.single" spell-check="true">
-                <symbol type="comment" name-selector="beancount.comment.content" />
-                <expression>;(.*)$</expression>
-                <capture number="1" name="beancount.comment.content" />
-            </scope>
-        </collection>
-        <collection name="heading">
-            <scope name="beancount.comment.heading" spell-check="true">
-                <symbol type="bookmark" name-selector="beancount.processing.content">
-                    <context behavior="next" group="h6" />
-                </symbol>
-                <expression>^\*{6}\s*(.*)$</expression>
-                <capture number="1" name="beancount.processing.content" />
-            </scope>
-            <scope name="beancount.comment.heading" spell-check="true">
-                <symbol type="bookmark" name-selector="beancount.processing.content">
-                    <context behavior="next" group="h5" />
-                </symbol>
-                <expression>^\*{5}\s*(.*)$</expression>
-                <capture number="1" name="beancount.processing.content" />
-            </scope>
-            <scope name="beancount.comment.heading" spell-check="true">
-                <symbol type="bookmark" name-selector="beancount.processing.content">
-                    <context behavior="next" group="h4" />
-                </symbol>
-                <expression>^\*{4}\s*(.*)$</expression>
-                <capture number="1" name="beancount.processing.content" />
-            </scope>
-            <scope name="beancount.comment.heading" spell-check="true">
-                <symbol type="bookmark" name-selector="beancount.processing.content">
-                    <context behavior="next" group="h3" />
-                </symbol>
-                <expression>^\*{3}\s*(.*)$</expression>
-                <capture number="1" name="beancount.processing.content" />
-            </scope>
-            <scope name="beancount.comment.heading" spell-check="true">
-                <symbol type="bookmark" name-selector="beancount.processing.content">
-                    <context behavior="next" group="h2" />
-                </symbol>
-                <expression>^\*{2}\s*(.*)$</expression>
-                <capture number="1" name="beancount.processing.content" />
-            </scope>
-            <scope name="beancount.comment.heading" spell-check="true">
-                <symbol type="bookmark" name-selector="beancount.processing.content">
-                    <context behavior="next" group="h1" />
-                </symbol>
-                <expression>^\*{1}\s*(.*)$</expression>
-                <capture number="1" name="beancount.processing.content" />
-            </scope>
-        </collection>
-
-        <!-- !Special Directives -->
-        <collection name="processing">
-            <!-- !include -->
-            <scope name="beancount.processing.include">
-                <symbol type="file" scope="global" name-selector="beancount.string">
-                    <display-name>
-                        <component variable="name" replace='"' replace-with="" />
-                    </display-name>
-                </symbol>
-                <starts-with>
-                    <expression>^include</expression>
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="string" />
-                </subscopes>
-            </scope>
-
-            <!-- !plugin -->
-            <scope name="beancount.processing.plugin">
-                <starts-with>
-                    <expression>^plugin</expression>
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="string" />
-                    <include syntax="self" collection="string" optional="true" />
-                </subscopes>
-            </scope>
-
-            <!-- !option -->
-            <scope name="beancount.processing.option">
-                <starts-with>
-                    <expression>^option</expression>
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="string-key" />
-                    <include syntax="self" collection="string" />
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Tag Stack -->
-        <collection name="tag-stack">
-            <scope name="beancount.pushtag">
-                <starts-with>
-                    <expression>^pushtag</expression>
-                    <capture number="0" name="beancount.keyword" />
-                </starts-with>
-                <ends-with>
-                    <expression>$</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="tag" />
-                    <include syntax="self" collection="comment" />
-                </subscopes>
-            </scope>
-            <scope name="beancount.poptag">
-                <starts-with>
-                    <expression>^poptag</expression>
-                    <capture number="0" name="beancount.keyword" />
-                </starts-with>
-                <ends-with>
-                    <expression>$</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="tag" />
-                    <include syntax="self" collection="comment" />
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Meta Stack -->
-        <collection name="meta-stack">
-            <scope name="beancount.pushmeta">
-                <starts-with>
-                    <expression>^pushmeta|^popmeta</expression>
-                    <capture number="0" name="beancount.keyword" />
-                </starts-with>
-                <ends-with><expression>$</expression></ends-with>
-                <subscopes>
-                    <scope name="beancount.identifier.key">
-                        <expression>\b[a-z][a-zA-Z0-9_-]+:</expression>
-                    </scope>
-                    <include syntax="self" collection="string" />
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Directives -->
-        <collection name="dated-directive">
-            <scope name="beancount.directive">
-                <starts-with>
-                    <expression>^(?=\d)</expression>
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="date" />
-                    <include syntax="self" collection="directive" />
-                    <scope name="beancount.metadata" optional="true">
-                        <starts-with>
-                            <expression>(?&lt;=\s)</expression>
-                        </starts-with>
-                        <ends-with>
-                            <expression>^(?=\S)|^\s*$</expression>
-                        </ends-with>
-                        <subscopes>
-                            <include syntax="self" collection="metadata" />
-                            <include syntax="self" collection="comment" />
-                        </subscopes>
-                    </scope>
-                </subscopes>
-            </scope>
-        </collection>
-
-        <collection name="directive">
-            <scope name="beancount.directive.txn">
-                <starts-with>
-                    <expression>[!&amp;\#?%PSTCURM*]|\b(txn)\b</expression>
-                    <capture number="0" name="beancount.keyword" />
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="string" optional="true" />
-                    <scope optional="true">
-                        <expression>\|</expression>
-                        <capture number="0" name="beancount.operator" />
-                    </scope>
-                    <include syntax="self" collection="string" optional="true" />
-                    <scope name="beancount.tag-or-link" optional="true">
-                        <starts-with>
-                            <expression>(?=[#^])</expression>
-                        </starts-with>
-                        <ends-with>
-                            <expression>$</expression>
-                        </ends-with>
-                        <subscopes>
-                            <include syntax="self" collection="tag" />
-                            <include syntax="self" collection="link" />
-                        </subscopes>
-                    </scope>
-                    <scope name="beancount.transaction.body" optional="true">
-                        <starts-with>
-                            <expression>(?&lt;=\s)</expression>
-                        </starts-with>
-                        <ends-with>
-                            <expression>^(?=\S)|^\s*$</expression>
-                        </ends-with>
-                        <subscopes>
-                            <include syntax="self" collection="posting" />
-                            <include syntax="self" collection="metadata" />
-                            <include syntax="self" collection="comment" />
-                        </subscopes>
-                    </scope>
-                </subscopes>
-            </scope>
-            <scope name="beancount.directive.event">
-                <symbol type="variable" scope="global" name-selector="beancount.string.key">
-                    <display-name>
-                        <component variable="name" replace='^"|"$|\\(?=")' replace-with="" />
-                    </display-name>
-                </symbol>
-                <starts-with>
-                    <expression>\b(event)\b</expression>
-                    <capture number="1" name="beancount.keyword" />
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="string-key" />
-                    <include syntax="self" collection="string" />
-                </subscopes>
-            </scope>
-            <scope name="beancount.directive.open">
-                <symbol type="type" scope="global" name-selector="beancount.account.name" />
-                <starts-with>
-                    <expression>\b(open)\b</expression>
-                    <capture number="1" name="beancount.keyword" />
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="account" />
-                    <scope name="beancount.directive.open.currency-constraint" optional="true" repeat="true">
-                        <starts-with>
-                            <expression>,|(?=[A-Z])</expression>
-                            <capture number="0" name="beancount.operator" />
-                        </starts-with>
-                        <ends-with />
-                        <subscopes anchored="true">
-                            <include syntax="self" collection="currency" />
-                        </subscopes>
-                    </scope>
-                    <include syntax="self" collection="string" optional="true" />
-                </subscopes>
-            </scope>
-            <scope name="beancount.directive.close">
-                <starts-with>
-                    <expression>\b(close)\b</expression>
-                    <capture number="1" name="beancount.keyword" />
-                </starts-with>
-                <ends-with />
-                <subscopes anchored="true">
-                    <include syntax="self" collection="account" />
-                </subscopes>
-            </scope>
-            <scope name="beancount.directive">
-                <starts-with>
-                    <expression>\b(commodity|balance|pad|note|document|price|custom)\b</expression>
-                    <capture number="1" name="beancount.keyword" />
-                </starts-with>
-                <ends-with>
-                    <expression>$</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="comment" />
-                    <include syntax="self" collection="value" />
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Postings -->
-        <collection name="posting">
-            <scope name="beancount.posting">
-                <starts-with>
-                    <expression>([!&amp;\#?%PSTCURM*])?\s*(?=\p{Lu})</expression>
-                    <capture number="1" name="beancount.keyword.txn" />
-                </starts-with>
-                <ends-with>
-                    <expression>$</expression>
-                </ends-with>
-                <subscopes anchored="true">
-                    <include syntax="self" collection="account" />
-                    <include syntax="self" collection="amount" optional="true" />
-                    <scope name="beancount.hold-cost" optional="true">
-                        <starts-with>
-                            <expression>\{\{?</expression>
-                            <capture number="0" name="beancount.bracket" />
-                        </starts-with>
-                        <ends-with>
-                            <expression>\}\}?</expression>
-                            <capture number="0" name="beancount.bracket" />
-                        </ends-with>
-                        <subscopes>
-                            <include syntax="self" collection="date" />
-                            <include syntax="self" collection="numer" />
-                            <include syntax="self" collection="amount" />
-                            <include syntax="self" collection="string" />
-                        </subscopes>
-                    </scope>
-                    <scope name="beancount.at-cost" optional="true">
-                        <starts-with>
-                            <expression>@{1,2}</expression>
-                            <capture number="0" name="beancount.operator" />
-                        </starts-with>
-                        <ends-with />
-                        <subscopes anchored="true">
-                            <include syntax="self" collection="amount" />
-                        </subscopes>
-                    </scope>
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Metadata -->
-        <collection name="metadata">
-            <scope name="beancount.metadata">
-                <starts-with>
-                    <expression>\b([a-z][a-zA-Z0-9_-]+)(:)[^\S\n\r]*</expression>
-                    <capture number="1" name="beancount.identifier.key" />
-                    <capture number="2" name="beancount.operator" />
-                </starts-with>
-                <ends-with>
-                    <expression>$|\s</expression>
-                </ends-with>
-                <subscopes>
-                    <include syntax="self" collection="value" />
-                    <include syntax="self" collection="comment" />
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Value Types -->
-        <collection name="value">
-            <include syntax="self" collection="string" />
-            <include syntax="self" collection="boolean" />
-            <include syntax="self" collection="account" />
-            <include syntax="self" collection="currency" />
-            <include syntax="self" collection="date" />
-            <include syntax="self" collection="tag" />
-            <include syntax="self" collection="link" />
-            <include syntax="self" collection="amount" />
-            <include syntax="self" collection="number" />
-        </collection>
-
-        <!-- !Strings -->
-        <collection name="string">
-            <scope name="beancount.string">
-                <starts-with>
-                    <expression>&quot;</expression>
-                    <capture number="0" name="beancount.string.delimiter" />
-                </starts-with>
-                <ends-with>
-                    <expression>&quot;</expression>
-                    <capture number="0" name="beancount.string.delimiter" />
-                </ends-with>
-                <subscopes>
-                    <scope name="beancount.string.escape">
-                        <expression>\\(?:\\|&quot;|n|r|t|b|f)</expression>
-                    </scope>
-                </subscopes>
-            </scope>
-        </collection>
-        <collection name="string-key">
-            <scope name="beancount.string.key">
-                <starts-with>
-                    <expression>&quot;</expression>
-                    <capture number="0" name="beancount.string.delimiter" />
-                </starts-with>
-                <ends-with>
-                    <expression>&quot;</expression>
-                    <capture number="0" name="beancount.string.delimiter" />
-                </ends-with>
-                <subscopes>
-                    <scope name="beancount.string.escape">
-                        <expression>\\(?:\\|&quot;|n|r|t|b|f)</expression>
-                    </scope>
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Accounts -->
-        <collection name="account">
-            <scope name="beancount.identifier.account">
-                <expression>\b(\p{Lu}[\p{L}\p{N}-]*)(((:)\p{Lu}[\p{L}\p{N}-]*)+)\b</expression>
-                <capture number="0" name="beancount.account.name" />
-                <capture number="1" name="beancount.identifier.type" />
-                <capture number="2" name="beancount.identifier.constant" />
-            </scope>
-        </collection>
-
-        <!-- !Dates -->
-        <collection name="date">
-            <scope name="beancount.identifier.type.enum">
-                <expression>\d{4,}[-/]\d+[-/]\d+</expression>
-            </scope>
-        </collection>
-
-        <!-- !Numbers, Currencies and Amounts -->
-        <collection name="number">
-            <scope name="beancount.value.number">
-                <starts-with>
-                    <!-- A date is never a number -->
-                    <expression>(?=[\d(+-])(?!\d{4,}[-/]\d+[-/]\d+)</expression>
-                </starts-with>
-                <ends-with>
-                    <expression>(?=[^\s\d.,()*\/+-]|$)</expression>
-                </ends-with>
-                <subscopes>
-                    <scope name="beancount.operator">
-                        <expression>[*/+-]</expression>
-                    </scope>
-                </subscopes>
-            </scope>
-        </collection>
-        <collection name="currency">
-            <scope name="beancount.identifier.type.enum">
-                <expression>[A-Z][A-Z0-9&apos;\._-]{0,22}[A-Z0-9]\b</expression>
-            </scope>
-        </collection>
-        <collection name="amount">
-            <scope name="beancount.value.amount">
-                <starts-with>
-                    <expression>(?=[\d\(+-])</expression>
-                </starts-with>
-                <ends-with>
-                    <expression>$</expression>
-                </ends-with>
-                <subscopes anchored="true" skip-whitespace="false">
-                    <include syntax="self" collection="number" />
-                    <include syntax="self" collection="currency" />
-                </subscopes>
-            </scope>
-        </collection>
-
-        <!-- !Tags and Links -->
-        <collection name="tag">
-            <scope name="beancount.identifier.property">
-                <symbol type="enum-member" scope="global" />
-                <expression>\#[A-Za-z0-9_/.-]+</expression>
-            </scope>
-        </collection>
-        <collection name="link">
-            <scope name="beancount.identifier.decorator">
-                <symbol type="property" scope="global" />
-                <expression>\^[A-Za-z0-9_/.-]+</expression>
-            </scope>
-        </collection>
-
-        <!-- !Booleans -->
-        <collection name="boolean-or-null">
-            <scope name="beancount.value.boolean">
-                <strings>
-                    <string>TRUE</string>
-                    <string>FALSE</string>
-                    <string>NULL</string>
-                </strings>
-            </scope>
-        </collection>
-    </collections>
+	<tree-sitter>
+		<highlights />
+		<symbols />
+		<folds />
+		<injections />
+	</tree-sitter>
 </syntax>
