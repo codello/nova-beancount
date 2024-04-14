@@ -10,12 +10,13 @@ GIT_TAG := $(shell git describe --tags --always)
 VERSION ?= $(patsubst v%,%,$(GIT_TAG))
 
 # Tools
+NOVA ?= nova
 TS ?= tree-sitter
 
 EXTENSION_FILES = extension.json extension.png \
 	README.md LICENSE.md CHANGELOG.md \
 	Images/ Scripts/ Queries/ Completions/ \
-	de.lproj/ \
+	$(wildcard *.lproj/) \
 	Syntaxes Syntaxes/libtree-sitter-beancount.dylib
 
 .PHONY: $(EXTENSION)
@@ -27,19 +28,19 @@ build: $(addprefix $(BUILD_DIR)/$(EXTENSION)/,$(EXTENSION_FILES))
 
 .PHONY: install
 install: build
-	nova extension activate $(BUILD_DIR)/$(EXTENSION)
+	$(NOVA) extension activate $(BUILD_DIR)/$(EXTENSION)
 
 .PHONY: validate
 validate: build
-	nova extension validate $(BUILD_DIR)/$(EXTENSION)
+	$(NOVA) extension validate $(BUILD_DIR)/$(EXTENSION)
 
 .PHONY: login
 login:
-	(echo "$$NOVA_USERNAME" && echo "$$NOVA_PASSWORD") | nova extension login
+	(echo "$$NOVA_USERNAME" && echo "$$NOVA_PASSWORD") | $(NOVA) extension login
 
 .PHONY: publish
 publish: build validate
-	nova extension publish --no-confirm $(BUILD_DIR)/$(EXTENSION)
+	$(NOVA) extension publish --no-confirm $(BUILD_DIR)/$(EXTENSION)
 
 .PHONY: clean
 clean:
@@ -83,7 +84,7 @@ override CXXFLAGS += -fPIC
 
 ## Linker Flags ##
 # - Include the /src/ directory for headers (for `tree_sitter/parser.h`)
-LDFLAGS = -arch arm64 -arch x86_64 -mmacosx-version-min=11.0 -I$(SRC_DIR) -F/Applications/Nova.app/Contents/Frameworks/ -framework SyntaxKit -rpath @loader_path/../Frameworks
+LDFLAGS := -arch arm64 -arch x86_64 -mmacosx-version-min=11.0 -I$(SRC_DIR) -F/Applications/Nova.app/Contents/Frameworks/ -framework SyntaxKit -rpath @loader_path/../Frameworks
 
 LINKSHARED := $(LINKSHARED)-dynamiclib -Wl,
 ifneq ($(ADDITIONAL_LIBS),)

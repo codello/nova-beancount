@@ -26,8 +26,6 @@ jobs:
           restore-keys: brew-
       - name: Install Dependencies
         run: brew bundle install
-      - name: Add Nova to PATH
-        run: echo "/Applications/Nova.app/Contents/SharedSupport" >> "$GITHUB_PATH"
       - name: Build Extension
         run: make build
       - name: Upload Artifacts
